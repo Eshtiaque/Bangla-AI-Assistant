@@ -1,20 +1,15 @@
-# Core LangChain v0.2+ 
-langchain>=0.2.16
-langchain-community>=0.2.16
-langchain-core>=0.2.16
-langchain-groq>=0.1.0
-
-# Vector DB + Embeddings
-chromadb>=0.5.3
-huggingface-hub>=0.20.0
-sentence-transformers>=2.3.0
-
-# Streamlit + UI
 streamlit>=1.36.0
+langchain>=0.1.0
+langchain-community>=0.0.20
+langchain-core>=0.1.0
+langchain-groq>=0.1.0
+langchain-huggingface>=0.0.3
+chromadb>=0.4.0
+gtts>=2.5.0
 python-dotenv>=1.0.0
-
-# TTS + Audio
-gtts>=2.5.3
-
-# SQLite Fix (Streamlit Cloud ONLY - skip locally)
-# pysqlite3-binary>=0.5.3  ← COMMENTED OUT FOR WINDOWS
+numpy>=1.24.0
+sentence-transformers>=2.2.0
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.20.0
+huggingface-hub>=0.20.0

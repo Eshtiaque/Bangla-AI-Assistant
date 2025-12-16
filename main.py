@@ -1,35 +1,19 @@
 import streamlit as st
 import os
-from gtts import gTTS
-from io import BytesIO
-from dotenv import load_dotenv
+import sys
+from gtts import gTTS        
+from io import BytesIO        
 
-# --- 🔥 LangChain V0.2+ & SQLite Fixes Integrated ---
-
-# 1. SQLite Fix (for Streamlit Cloud deployment)
-# This code checks if pysqlite3-binary is installed and uses it instead of standard sqlite3.
-try:
-    __import__('pysqlite3')
-    import sys
-    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-except ImportError:
-    # If not running in an environment where pysqlite3 is necessary/installed, continue normally.
-    pass
-
-# --- Core Imports ---
+# --- Imports ---
 from langchain_groq import ChatGroq
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_core.prompts import PromptTemplate 
-
-# 🔥 LangChain V0.2+ Fix: Use composable chains instead of deprecated RetrievalQA
-# 🔥 Most Reliable v0.2+ Imports (Recommended)
-#from langchain.chains.retrieval import create_retrieval_chain
-#from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
-
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-
+from langchain.prompts import PromptTemplate
+try:
+    from langchain.chains import RetrievalQA
+except ImportError:
+    from langchain.chains.retrieval_qa.base import RetrievalQA
+from dotenv import load_dotenv
 
 # Import data from dataset.py
 from dataset import get_data 
@@ -71,7 +55,7 @@ except Exception as e:
     st.error(f"❌ Setup Error: {e}")
     st.stop()
 
-# --- 3. Sidebar: Demo Questions (No Change) ---
+# --- 3. Sidebar: Demo Questions ---
 with st.sidebar:
     st.title("📌 Demo Questions")
     st.info("Try asking these questions to test the bot:")
@@ -95,7 +79,7 @@ with st.sidebar:
     st.write("---")
     st.caption("© Bangla RAG Chatbot Project")
 
-# --- 4. Helper Function: Topic Detection (No Change) ---
+# --- 4. Helper Function: Topic Detection ---
 def detect_topic(query, llm):
     """
     Detects the topic of the user's query and maps it to the 
@@ -129,7 +113,7 @@ def detect_topic(query, llm):
     except:
         return "unknown"
 
-# --- 5. Helper Function: Text to Speech (No Change) ---
+# --- 5. Helper Function: Text to Speech (নতুন) ---
 def text_to_speech(text):
     """
     Generate Audio from Text using Google TTS
@@ -142,7 +126,7 @@ def text_to_speech(text):
     except:
         return None
 
-# --- 6. Main UI Layout (No Change) ---
+# --- 6. Main UI Layout ---
 st.title("🤖 Bangla AI Assistant (Voice Enabled 🔊)")
 st.markdown("Ask questions about: **Education, Health, Sports, Technology, Travel**")
 
@@ -188,12 +172,11 @@ if query := st.chat_input("আপনার প্রশ্ন লিখুন...
         else:
             try:
                 # C. Strict Prompt (Prevents Hallucinations)
-                # Note: The prompt is structured for the new create_stuff_documents_chain format.
                 template = """
                 You are a helpful assistant. Answer the question based ONLY on the provided Context.
                 
                 Context: {context}
-                Question: {input}
+                Question: {question}
                 
                 Rules:
                 1. If the answer is in the context, output it exactly.
@@ -209,28 +192,23 @@ if query := st.chat_input("আপনার প্রশ্ন লিখুন...
                     search_kwargs={"filter": {"topic": topic}, "k": 1}
                 )
                 
-                # --- 🔥 E. LangChain V0.2+ Chain Construction ---
+                qa_chain = RetrievalQA.from_chain_type(
+                    llm=llm,
+                    chain_type="stuff",
+                    retriever=retriever,
+                    chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
+                )
                 
-                # 1. Create the Document Chain (LLM + Prompt logic)
-                document_chain = create_stuff_documents_chain(llm, QA_CHAIN_PROMPT)
-
-                # 2. Create the Retrieval Chain (Retriever + Document Chain)
-                qa_chain = create_retrieval_chain(retriever, document_chain)
-
-                # 3. Invoke the chain (The key is 'input' in new versions)
-                res = qa_chain.invoke({"input": query}) 
+                # E. Generate Answer
+                res = qa_chain.invoke(query)
+                answer = res['result']
                 
-                # E. Generate Answer - New output key is 'answer'
-                answer = res['answer'] 
-
-                clean_answer = answer.replace("উত্তর:", "").replace("Answer:", "").strip()
-                
-                response_text = f"**বিষয়:** {display_text}\n\n{clean_answer}"
-                voice_text = clean_answer # Only speak the answer part
+                response_text = f"**বিষয়:** {display_text}\n\n{answer}"
+                voice_text = answer # Only speak the answer part
                 
             except Exception as e:
                 response_text = f"Error: {e}"
-                voice_text = "দুঃখিত, একটি টেকনিক্যাল সমস্যা হয়েছে।"
+                voice_text = "দুঃখিত, একটি টেকনিক্যাল সমস্যা হয়েছে।"
 
         # Display assistant response
         message_placeholder.markdown(response_text)
