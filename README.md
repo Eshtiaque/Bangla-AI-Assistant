@@ -56,9 +56,7 @@ Make sure you have requirements.txt in the folder. Then run:
 ```
 pip install -r requirements.txt
 ```
-```
-pip install langchain==0.1.20 langchain-community==0.0.38 langchain-core==0.1.52 langchain-groq==0.1.3 chromadb sentence-transformers gTTS streamlit python-dotenv
-```
+
 # 5. Set API Key
 You can set the API key in two ways:
 

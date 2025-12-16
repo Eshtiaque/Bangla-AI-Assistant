@@ -17,3 +17,4 @@ __pycache__/
 .idea/
 .vscode/
 
+# GROQ_API_KEY=
