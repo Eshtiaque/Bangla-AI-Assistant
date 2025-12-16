@@ -56,6 +56,9 @@ Make sure you have requirements.txt in the folder. Then run:
 ```
 pip install -r requirements.txt
 ```
+```
+pip install langchain==0.1.20 langchain-community==0.0.38 langchain-core==0.1.52 langchain-groq==0.1.3 chromadb sentence-transformers gTTS streamlit python-dotenv
+```
 # 5. Set API Key
 You can set the API key in two ways:
 
@@ -64,10 +67,7 @@ Create a .env file in the root folder and add:
 GROQ_API_KEY=your_actual_api_key_here
 OR, open app.py and manually paste your key in the api_key variable fallback section.
 ```
-# Install Dependency
-```
-pip install langchain==0.1.20 langchain-community==0.0.38 langchain-core==0.1.52 langchain-groq==0.1.3 chromadb sentence-transformers gTTS streamlit python-dotenv
-```
+
 
 # ▶️ How to Run
 Run the Streamlit app using the following command:
