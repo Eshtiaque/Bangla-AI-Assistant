@@ -1,0 +1,16 @@
+langchain
+langchain-groq
+langchain-huggingface
+chromadb
+python-dotenv
+sentence-transformers
+
+streamlit
+langchain
+langchain-groq
+langchain-huggingface
+langchain-community
+chromadb
+python-dotenv
+sentence-transformers
+gTTS
