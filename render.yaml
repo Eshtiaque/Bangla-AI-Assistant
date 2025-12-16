@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: bangla-ai-chatbot
+    env: docker
+    repo: https://github.com/Eshtiaque/Bangla-AI-Assistant
+    region: singapore 
+    plan: free 
+    buildCommand: "" 
+    startCommand: "" 
+    healthCheckPath: /

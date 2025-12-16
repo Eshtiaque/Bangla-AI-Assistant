@@ -1,7 +1,3 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
 import streamlit as st
 import os
 from gtts import gTTS
@@ -17,15 +13,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import PromptTemplate 
 
 # 🔥 Update 2: RetrievalQA 
-#from langchain.chains import RetrievalQA
-try:
-    from langchain.chains import RetrievalQA
-except ImportError:
-    try:
-        from langchain.chains.retrieval_qa.base import RetrievalQA
-    except ImportError:
-        # যদি তবুও না পায়
-        raise ImportError("Failed to import RetrievalQA from any known LangChain path.")
+from langchain.chains import RetrievalQA
 
 # Import data from dataset.py
 from dataset import get_data 
