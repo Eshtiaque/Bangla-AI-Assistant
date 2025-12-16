@@ -24,6 +24,7 @@ st.set_page_config(page_title="Bangla AI Chatbot", page_icon="🤖", layout="wid
 # --- 1. Setup API Key ---
 load_dotenv()
 api_key = os.getenv("GROQ_API_KEY")
+print(os.environ.get(api_key))
 
 # Fallback if .env is missing
 if not api_key:
