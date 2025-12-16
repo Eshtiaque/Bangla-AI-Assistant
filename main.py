@@ -17,7 +17,15 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import PromptTemplate 
 
 # 🔥 Update 2: RetrievalQA 
-from langchain.chains import RetrievalQA
+#from langchain.chains import RetrievalQA
+try:
+    from langchain.chains import RetrievalQA
+except ImportError:
+    try:
+        from langchain.chains.retrieval_qa.base import RetrievalQA
+    except ImportError:
+        # যদি তবুও না পায়
+        raise ImportError("Failed to import RetrievalQA from any known LangChain path.")
 
 # Import data from dataset.py
 from dataset import get_data 
