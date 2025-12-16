@@ -23,8 +23,10 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import PromptTemplate 
 
 # 🔥 LangChain V0.2+ Fix: Use composable chains instead of deprecated RetrievalQA
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain 
+# 🔥 Most Reliable v0.2+ Imports (Recommended)
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
+
 
 # Import data from dataset.py
 from dataset import get_data 
